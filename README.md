@@ -1,2 +1,2 @@
 # workout_tracker
-workout tracker in HTMX+GO
+workout tracker using HTMX+GO+Fibre
