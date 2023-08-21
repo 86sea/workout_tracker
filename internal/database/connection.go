@@ -16,7 +16,7 @@ import (
 )
 
 type Dbisntance struct {
-	Db *gorm.DB
+	Instance *gorm.DB
 }
 
 var DB Dbisntance
@@ -45,6 +45,6 @@ func Connect() {
 	db.AutoMigrate(&models.User{})
 
 	DB = Dbisntance{
-		Db: db,
+		Instance: db,
 	}
 }

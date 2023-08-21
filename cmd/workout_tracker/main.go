@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"workout_tracker/internal/database"
+    "workout_tracker/internal/routes"
     //"log"
 )
 
@@ -13,10 +14,6 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
     database.Connect()
-	//if err := database.Connect(); err != nil {
-		//log.Fatal(err)
-	//} else{
-        //log.Println("connected to db")
-    //}
+    routes.AuthRoutes(app)
     app.Listen(":3000")
 }

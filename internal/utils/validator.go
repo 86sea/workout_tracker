@@ -3,7 +3,6 @@ package utils
 import (
 	"fmt"
 	"strings"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
