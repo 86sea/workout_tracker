@@ -15,5 +15,6 @@ func main() {
 	})
     database.Connect()
     routes.AuthRoutes(app)
+    routes.WebRoutes(app)
     app.Listen(":3000")
 }

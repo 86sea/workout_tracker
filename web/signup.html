@@ -8,7 +8,7 @@
 </head>
 <body>
     <h2>Signup Form</h2>
-    <form action="/auth/signup" method="post">
+    <form id="auth-form" action="/auth/signup" method="post">
         <div>
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
@@ -24,4 +24,9 @@
         <input type="submit" value="Signup">
     </form>
 </body>
+<script src="/js/auth.js"></script>
+<script>
+    // 'signup' or 'login' as per the respective page
+    handleAuthForm('/auth/signup');
+</script>
 </html>

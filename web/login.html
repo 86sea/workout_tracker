@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>Login Form</h2>
-    <form action="/auth/login" method="post">
+    <form id="auth-form" action="/auth/login" method="post">
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
@@ -19,4 +19,9 @@
         <input type="submit" value="Login">
     </form>
 </body>
+<script src="/js/auth.js"></script>
+<script>
+    // 'signup' or 'login' as per the respective page
+    handleAuthForm('/auth/login');
+</script>
 </html>
