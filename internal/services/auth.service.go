@@ -1,6 +1,7 @@
 package services
 
 import (
+	"time"
 	"workout_tracker/internal/jwt"
 	"workout_tracker/internal/models"
 	"workout_tracker/internal/repository"
@@ -18,13 +19,11 @@ type LoginDTO struct {
 	Password string `json:"password" validate:"password"`
 }
 
-// SignupDTO defined the /login payload
 type SignupDTO struct {
 	LoginDTO
 	Name string `json:"name" validate:"required,min=3"`
 }
 
-// UserResponse todo
 type UserResponse struct {
 	ID       uint   `json:"id"`
 	Name     string `json:"name"`
@@ -32,12 +31,10 @@ type UserResponse struct {
 	Password string `json:"-"`
 }
 
-// AccessResponse todo
 type AccessResponse struct {
 	Token string `json:"token"`
 }
 
-// AuthResponse todo
 type AuthResponse struct {
 	User *UserResponse   `json:"user"`
 	Auth *AccessResponse `json:"auth"`
@@ -66,6 +63,13 @@ func Login(ctx *fiber.Ctx) error {
 		ID: u.ID,
 	})
 
+	ctx.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    t,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Secure:   false,    // Set this to true if you are using HTTPS
+		SameSite: "Strict", // This is good for CSRF protection
+	})
 	return ctx.JSON(&AuthResponse{
 		User: u,
 		Auth: &AccessResponse{
@@ -101,6 +105,14 @@ func Signup(ctx *fiber.Ctx) error {
 	// generate access token
 	t := jwt.Generate(&jwt.TokenPayload{
 		ID: user.ID,
+	})
+
+	ctx.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    t,
+		Expires:  time.Now().Add(24 * time.Hour),
+		Secure:   false,
+		SameSite: "Strict",
 	})
 
 	return ctx.JSON(&AuthResponse{

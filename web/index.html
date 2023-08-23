@@ -1,1 +1,28 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Title</title>
+
+</head>
+
+<body>
+    <h1>Welcome to my webpage</h1>
+    <p>This is a paragraph of text.</p>
+
+<form id="set-form" action="/newset" method="post">
+    <input type="number" name="Reps">
+    <input type="number" name="Weight">
+    <input type="text" name="ExerciseName">
+    <input type="text" name="ExerciseType">
+    <input type="submit" value="Submit">
+</form>
+</body>
+
+<script src="/js/add_set.js"></script>
+<script>
+    handleSetForm('/newset');
+</script>
+</html>
