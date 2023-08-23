@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 	"time"
 	"workout_tracker/internal/database"
 	"workout_tracker/internal/jwt"
@@ -61,9 +63,54 @@ func NewSet(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusInternalServerError).SendString("Error adding set to database")
 	}
 
-	return ctx.JSON(Response{
-		Success: true,
-		Data:    newSet,
-	})
+	var builder strings.Builder
+	builder.WriteString(fmt.Sprintf(
+		`<tr>
+                <td>%s</td>
+                <td>%d</td>
+                <td>%d</td>
+                <td>%s</td>
+                <td>%s</td>
+            </tr>`,
+		date.Format("02/01/2006"), uint(reps_int), uint(weight_int), payload.ExerciseName, payload.ExerciseType,
+	))
+	//return ctx.JSON(Response{
+	//Success: true,
+	//Data:    newSet,
+	//})
 
+	return ctx.SendString(builder.String())
+
+}
+
+func LoadSets(ctx *fiber.Ctx) error {
+
+	t := ctx.Cookies("jwt")
+	claims, err := jwt.Verify(t)
+	if err != nil {
+		return ctx.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
+	}
+	userID := claims.ID
+
+	var sets []models.Set
+	result := database.DB.Instance.Where("user_id = ?", userID).Order("date DESC").Find(&sets)
+
+	if result.Error != nil {
+		return ctx.Status(fiber.StatusInternalServerError).SendString("Error fetching sets from database")
+	}
+
+	var builder strings.Builder
+	for _, set := range sets {
+		builder.WriteString(fmt.Sprintf(
+			`<tr>
+                <td>%s</td>
+                <td>%d</td>
+                <td>%d</td>
+                <td>%s</td>
+                <td>%s</td>
+            </tr>`,
+			set.Date.Format("02/01/2006"), set.Reps, set.Weight, set.ExerciseName, set.ExerciseType,
+		))
+	}
+	return ctx.SendString(builder.String())
 }

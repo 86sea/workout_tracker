@@ -6,23 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Title</title>
 
+    <script src="https://unpkg.com/htmx.org"></script>
 </head>
 
 <body>
     <h1>Welcome to my webpage</h1>
     <p>This is a paragraph of text.</p>
 
-<form id="set-form" action="/newset" method="post">
+<form id="set-form" hx-post="/newset" hx-trigger="submit" hx-target="#setsTableBody" hx-swap="afterbegin">
     <input type="number" name="Reps">
     <input type="number" name="Weight">
     <input type="text" name="ExerciseName">
     <input type="text" name="ExerciseType">
     <input type="submit" value="Submit">
 </form>
+
+<div hx-get="/user/sets" hx-trigger="load" hx-target="#setsTableBody">
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Reps</th>
+                <th>Weight</th>
+                <th>Exercise Name</th>
+                <th>Exercise Type</th>
+            </tr>
+        </thead>
+        <tbody id="setsTableBody">
+            <!-- Server rendered rows will appear here -->
+        </tbody>
+    </table>
+</div>
+
 </body>
 
-<script src="/js/add_set.js"></script>
-<script>
-    handleSetForm('/newset');
-</script>
 </html>
