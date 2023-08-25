@@ -32,7 +32,7 @@ type UpdateSetPayload struct {
 	Weight       string `json:"Weight"`
 	ExerciseName string `json:"ExerciseName"`
 	ExerciseType string `json:"ExerciseType"`
-	SetID       uint   `json:"SetID"`
+	SetID        uint   `json:"SetID"`
 }
 
 func BuildRow(date time.Time, reps, weight int, exerciseName, exerciseType string, setID uint) string {
@@ -56,14 +56,22 @@ func BuildRow(date time.Time, reps, weight int, exerciseName, exerciseType strin
                             >
                             Update
                             </a></li>
-                        <li><a class="dropdown-item" data-id="%d" href="#">Delete</a></li>
+                        <li>
+                            <a class="dropdown-item" 
+                               href="#" 
+                               hx-post="/user/deleteset?setID=%d" 
+                               hx-target="#row-%d" 
+                               hx-swap="delete" 
+                               hx-confirm="Are you sure you want to delete this?">
+                            Delete</a>
+                        </li>
                     </ul>
                 </div>
             </td>
         </tr>`,
 		setID,
 		date.Format("02/01/2006"), reps, weight, exerciseName, exerciseType,
-		setID, setID, setID,
+		setID, setID, setID, setID,
 	)
 }
 func NewSet(ctx *fiber.Ctx) error {
@@ -164,7 +172,7 @@ func UpdateSet(ctx *fiber.Ctx) error {
 		ExerciseType: payload.ExerciseType,
 		UserID:       userID,
 	}
-    println(payload.SetID)
+	println(payload.SetID)
 	if err := database.DB.Instance.First(&newSet, int(payload.SetID)).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return ctx.Status(fiber.StatusNotFound).SendString("Set not found")
@@ -224,4 +232,19 @@ func UpdateForm(ctx *fiber.Ctx) error {
   </tr><div>`, targetRowId, targetRowId, setID,
 	))
 	return ctx.SendString(builder.String())
+}
+
+func DeleteSet(ctx *fiber.Ctx) error {
+	setID := ctx.Query("setID")
+
+    println(setID)
+	if setID == "" {
+		return ctx.Status(fiber.StatusBadRequest).SendString("Set ID not provided")
+	}
+
+    if err := database.DB.Instance.Delete(&models.Set{}, setID).Error; err != nil {
+        return ctx.Status(fiber.StatusInternalServerError).SendString("Error deleting set from databse")
+    }
+
+    return ctx.SendStatus(fiber.StatusOK)
 }

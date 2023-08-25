@@ -35,6 +35,7 @@ func WebRoutes(app *fiber.App) {
     app.Get("/user/sets", handlers.LoadSets)
 
     app.Post("/user/updateset", handlers.UpdateSet)
+    app.Post("/user/deleteset", handlers.DeleteSet)
     app.Get("/user/updateform", handlers.UpdateForm)
 
 }
