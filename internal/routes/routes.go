@@ -19,10 +19,6 @@ func WebRoutes(app *fiber.App) {
 	app.Static("/js", "./web/js")
 	app.Static("/", "./web")
 
-	//app.Get("/index", func(ctx *fiber.Ctx) error {
-	//return ctx.SendFile("./web/index.html")
-	//})
-
 	app.Get("/index", func(ctx *fiber.Ctx) error {
 		return ctx.SendFile("./web/index.html")
 	})
@@ -37,5 +33,8 @@ func WebRoutes(app *fiber.App) {
 	app.Post("/newset", handlers.NewSet)
 
     app.Get("/user/sets", handlers.LoadSets)
+
+    app.Post("/user/updateset", handlers.UpdateSet)
+    app.Get("/user/updateform", handlers.UpdateForm)
 
 }
