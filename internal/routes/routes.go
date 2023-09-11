@@ -1,8 +1,9 @@
 package routes
 
 import (
+	"workout_tracker/internal/handlers"
+	"workout_tracker/internal/middleware"
 	"workout_tracker/internal/services"
-    "workout_tracker/internal/handlers"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -19,7 +20,7 @@ func WebRoutes(app *fiber.App) {
 	app.Static("/js", "./web/js")
 	app.Static("/", "./web")
 
-	app.Get("/index", func(ctx *fiber.Ctx) error {
+	app.Get("/index", middleware.RequireAuth, func(ctx *fiber.Ctx) error {
 		return ctx.SendFile("./web/index.html")
 	})
 	app.Get("/signup", func(ctx *fiber.Ctx) error {
@@ -31,11 +32,9 @@ func WebRoutes(app *fiber.App) {
 	})
 
 	app.Post("/newset", handlers.NewSet)
-
-    app.Get("/user/sets", handlers.LoadSets)
-
-    app.Post("/user/updateset", handlers.UpdateSet)
-    app.Post("/user/deleteset", handlers.DeleteSet)
-    app.Get("/user/updateform", handlers.UpdateForm)
+	app.Get("/user/sets", handlers.LoadSets)
+	app.Post("/user/updateset", handlers.UpdateSet)
+	app.Post("/user/deleteset", handlers.DeleteSet)
+	app.Get("/user/updateform", handlers.UpdateForm)
 
 }
